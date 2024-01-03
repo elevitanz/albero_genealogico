@@ -1,0 +1,222 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "rgba(255, 0, 0, 0.7)", "id": 1, "label": "Lucio Leonardi", "level": 1, "shape": "dot", "size": 22, "title": "Pianoforte - Soldi - America - Nuova Famiglia", "x": -5}, {"color": "rgba(46, 139, 87, 0.7)", "id": 2, "label": "Raffaela Raciti", "level": 1, "shape": "dot", "size": 22, "title": "Moglie di Lucio lasciata per l\u0027America", "x": 12}, {"color": "rgba(255, 0, 0, 0.7)", "id": 3, "label": "Turiela \n Zu Don Savvature", "level": 2, "shape": "dot", "size": 20, "title": "Tre mogli - altre storie?", "x": -5}, {"color": "rgba(46, 139, 87, 0.7)", "id": 4, "label": "Anna", "level": 2, "shape": "dot", "size": 20, "title": "Prima moglie di Turiela", "x": -4}, {"color": "rgba(46, 139, 87, 0.7)", "id": 5, "label": "Angela", "level": 2, "shape": "dot", "size": 20, "title": "Seconda moglie di Turiela", "x": -3}, {"color": "rgba(46, 139, 87, 0.7)", "id": 6, "label": "Anna", "level": 2, "shape": "dot", "size": 20, "title": "Terza moglie di Turiela", "x": -2}, {"color": "rgba(255, 0, 0, 0.7)", "id": 7, "label": "Giuseppa", "level": 2, "shape": "dot", "size": 20, "title": "--", "x": 0}, {"color": "rgba(46, 139, 87, 0.7)", "id": 8, "label": "Vincenzo \n Cosentino", "level": 2, "shape": "dot", "size": 20, "title": "Marito di Giuseppa", "x": 1}, {"color": "rgba(255, 0, 0, 0.7)", "id": 9, "label": "Ferdinando", "level": 2, "shape": "dot", "size": 20, "title": "--", "x": 3}, {"color": "rgba(46, 139, 87, 0.7)", "id": 10, "label": "Antonia \n Cosentino", "level": 2, "shape": "dot", "size": 20, "title": "Moglie di Ferdinando", "x": 4}, {"color": "rgba(255, 0, 0, 0.7)", "id": 11, "label": "Marta", "level": 2, "shape": "dot", "size": 20, "title": "--", "x": 5}, {"color": "rgba(46, 139, 87, 0.7)", "id": 12, "label": "Filippo Neri \n Finocchiaro", "level": 2, "shape": "dot", "size": 20, "title": "Marito di Marta", "x": 6}, {"color": "white", "id": -1, "label": -1, "level": 3, "shape": "dot", "size": 0}, {"color": "white", "id": -2, "label": -2, "level": 3, "shape": "dot", "size": 0}, {"color": "rgba(255, 0, 0, 0.7)", "id": 13, "label": "Lucio", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 14, "label": "Gioconda", "level": 4, "shape": "dot", "size": 20, "title": "Moglie di Lucio"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 15, "label": "Tina", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 16, "label": "Concettina", "level": 4, "shape": "dot", "size": 20, "title": "Si sposa con Senza Nome"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 17, "label": "Padre Leonardi", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 18, "label": "Iluzza", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 19, "label": "Carmelo", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "white", "id": -3, "label": -3, "level": 5, "shape": "dot", "size": 0, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 20, "label": "Lucio \n Zu Neddu", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 21, "label": "Leonarda Spampinato", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 22, "label": "Senza Nome", "level": 4, "shape": "dot", "size": 20, "title": "Si sposa con Concettina"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 23, "label": "Raffaela", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 24, "label": "Paolo Isaia", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "white", "id": 25, "label": 25, "level": 5, "shape": "dot", "size": 0}, {"color": "rgba(255, 0, 0, 0.7)", "id": 26, "label": "Grazia Mavara", "level": 4, "shape": "dot", "size": 20, "title": "Scapp\u00f2 con il fidanzato della figlia"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 27, "label": "Carlo", "level": 4, "shape": "dot", "size": 20, "title": "Carlo Indelicato, marito della mavara"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 28, "label": "Lucio", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 29, "label": "Carmelina", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 30, "label": "Tina", "level": 4, "shape": "dot", "size": 20, "title": "Prima figlia di Marta"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 31, "label": "Alfonso Vitanza", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 32, "label": "Raffaela", "level": 4, "shape": "dot", "size": 20, "title": "Seconda figlia di Marta"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 33, "label": "Pietrino", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 34, "label": "Alfio", "level": 4, "shape": "dot", "size": 20, "title": "Terzo figlio di Marta che si sposa con Pina, figlia di Raffaela e Paolo Isaia"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 35, "label": "Pippa", "level": 4, "shape": "dot", "size": 20, "title": "Quarta figlia di Marta"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 37, "label": "Maria", "level": 4, "shape": "dot", "size": 20, "title": "Quinta figlia di Marta"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 38, "label": "Luigi Scannella", "level": 4, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 39, "label": "Anna", "level": 4, "shape": "dot", "size": 20, "title": "Sesta figlia di Marta, che si sposa con Saro, figlio di Grazia Mavara e Carlo"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 40, "label": "Enzo", "level": 6, "shape": "dot", "size": 20, "title": "Primo figlio di Concettina e Senza Nome"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 41, "label": "Pippo", "level": 6, "shape": "dot", "size": 20, "title": "Secondo figlio di Concettina e Senza Nome"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 42, "label": "Paula", "level": 6, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 43, "label": "Mariangela", "level": 6, "shape": "dot", "size": 20, "title": "Terza figlia di Concettina e Senza Nome"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 44, "label": "Vincenzino", "level": 6, "shape": "dot", "size": 20, "title": "Primo figlio di Iluzza e Carmelo"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 45, "label": "Salvatore", "level": 6, "shape": "dot", "size": 20, "title": "Secondo figlio di Iluzza e Carmelo"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 46, "label": "Pina", "level": 6, "shape": "dot", "size": 20, "title": "Terza figlia di Iluzza e Carmelo"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 47, "label": "Pina", "level": 6, "shape": "dot", "size": 20, "title": "Prima figlia di Zu Neddu e Leonarda"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 48, "label": "Enzo", "level": 6, "shape": "dot", "size": 20, "title": "Secondo figlio di Zu Neddu e Leonarda"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 49, "label": "Ciccio", "level": 6, "shape": "dot", "size": 20, "title": "Primo figlio di Raffaela e Paolo Isaia"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 50, "label": "Maria Laudani", "level": 6, "shape": "dot", "size": 20, "title": "Moglie di Ciccio"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 51, "label": "Rosa", "level": 6, "shape": "dot", "size": 20, "title": "Seconda figlia di Raffaela e Paolo Isaia"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 52, "label": "Salvatore Galeano", "level": 6, "shape": "dot", "size": 20, "title": "Marito di Rosa"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 53, "label": "Pina", "level": 6, "shape": "dot", "size": 20, "title": "Terza figlia di Raffaela e Paolo Isaia, che si \u00e8 sposata con Alfio, terzo figlio di Marta"}, {"color": "white", "id": -4, "label": -4, "level": 7, "shape": "dot", "size": 0, "title": ""}, {"color": "rgba(255, 0, 0, 0.7)", "id": 54, "label": "Enzo", "level": 6, "shape": "dot", "size": 20, "title": "Quarto figlio di Raffaela e Paolo Isaia - Padrino di battesimo di Salvatore Vitanza"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 55, "label": "Maria Nicolosi", "level": 6, "shape": "dot", "size": 20, "title": "Moglie di Enzo"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 56, "label": "Maria", "level": 6, "shape": "dot", "size": 20, "title": "Quinta figlia di Raffaela e Paolo Isaia"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 57, "label": "Saro", "level": 6, "shape": "dot", "size": 20, "title": "Unico figlio di Grazia Mavara e Carlo, sposato con Anna"}, {"color": "white", "id": -5, "label": -5, "level": 7, "shape": "dot", "size": 0, "title": ""}, {"color": "rgba(255, 0, 0, 0.7)", "id": 58, "label": "Franco", "level": 6, "shape": "dot", "size": 20, "title": "Primo figlio di Tina e Alfonso"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 59, "label": "Libusa Gruzova", "level": 6, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 60, "label": "Filippo", "level": 6, "shape": "dot", "size": 20, "title": "Secondo figlio di Tina e Alfonso"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 61, "label": "Alfio", "level": 6, "shape": "dot", "size": 20, "title": "Terzo figlio di Tina e Alfonso"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 62, "label": "Amalia Fabretti", "level": 6, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 63, "label": "Mario", "level": 6, "shape": "dot", "size": 20, "title": "Quarto figlio di Tina e Alfonso"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 64, "label": "Carla Giuliani", "level": 6, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 65, "label": "Salvo", "level": 6, "shape": "dot", "size": 20, "title": "Quinto figlio di Tina e Alfonso"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 66, "label": "Rosa Bagiante", "level": 6, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 67, "label": "Pippo", "level": 6, "shape": "dot", "size": 20, "title": "Primo figlio di Maria e Luigi"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 68, "label": "Cecilia Buggiani", "level": 6, "shape": "dot", "size": 20, "title": "--"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 69, "label": "Antonio", "level": 6, "shape": "dot", "size": 20, "title": "Secondo figlio di Maria e Luigi"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 70, "label": "Alice", "level": 6, "shape": "dot", "size": 20, "title": "Moglie di Antonio"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 71, "label": "Joy", "level": 8, "shape": "dot", "size": 20, "title": "Unico figlio di Pippo"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 72, "label": "Raffaela", "level": 8, "shape": "dot", "size": 20, "title": "Prima figlia di Ciccio e Maria Laudani"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 73, "label": "Carmen", "level": 8, "shape": "dot", "size": 20, "title": "Seconda figlia di Ciccio e Maria Laudani"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 74, "label": "Renata", "level": 8, "shape": "dot", "size": 20, "title": "Terza figlia di Ciccio e Maria Laudani"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 75, "label": "Paolo", "level": 8, "shape": "dot", "size": 20, "title": "Primo figlio di Rosa e Salvatore Galeano"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 76, "label": "Enza", "level": 8, "shape": "dot", "size": 20, "title": "Seconda figlia di Rosa e Salvatore Galeano"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 77, "label": "Stefania", "level": 8, "shape": "dot", "size": 20, "title": "Terza figlia di Rosa e Salvatore Galeano"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 78, "label": "Filippo Marcello", "level": 8, "shape": "dot", "size": 20, "title": "Primo figlio di Pina e Alfio"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 79, "label": "Marta", "level": 8, "shape": "dot", "size": 20, "title": "Seconda figlia di Pina e Alfio"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 80, "label": "Paolo", "level": 8, "shape": "dot", "size": 20, "title": "Terzo figlio di Pina e Alfio"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 81, "label": "Raffaela", "level": 8, "shape": "dot", "size": 20, "title": "Quarta figlia di Pina e Alfio"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 82, "label": "Paolo", "level": 8, "shape": "dot", "size": 20, "title": "Primo figlio di Enzo Isaia e Maria Nicolosi"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 83, "label": "Alessandro", "level": 8, "shape": "dot", "size": 20, "title": "Secondo figlio di Enzo Isaia e Maria Nicolosi"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 84, "label": "Nuccio", "level": 8, "shape": "dot", "size": 20, "title": "Primo figlio di Saro e Anna"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 85, "label": "Graziella", "level": 8, "shape": "dot", "size": 20, "title": "Seconda figlia di Saro e Anna"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 86, "label": "Libera", "level": 8, "shape": "dot", "size": 20, "title": "Unica figlia di Franco e Libusa"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 87, "label": "Dario della Libera", "level": 8, "shape": "dot", "size": 20, "title": "Compagno di Libera"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 88, "label": "Francesca", "level": 8, "shape": "dot", "size": 20, "title": "Prima figlia di Alfio e Amalia"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 89, "label": "Alfonso", "level": 8, "shape": "dot", "size": 20, "title": "Secondo figlio di Alfio e Amalia"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 90, "label": "Claudia", "level": 8, "shape": "dot", "size": 20, "title": "Unica figlia di Mario e Carla"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 91, "label": "Andrea", "level": 8, "shape": "dot", "size": 20, "title": "Primo figlio di Salvo e Rosita"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 92, "label": "Eleonora", "level": 8, "shape": "dot", "size": 20, "title": "Seconda figlia di Salvo e Rosita"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 93, "label": "Chiara", "level": 8, "shape": "dot", "size": 20, "title": "Prima figlia di Pippo e Cecilia"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 94, "label": "Fabio", "level": 8, "shape": "dot", "size": 20, "title": "Marito di Chiara"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 95, "label": "Oriana", "level": 8, "shape": "dot", "size": 20, "title": "Seconda figlia di Pippo e Cecilia"}, {"color": "rgba(46, 139, 87, 0.7)", "id": 96, "label": "Stefano", "level": 8, "shape": "dot", "size": 20, "title": "Marito di Oriana"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 97, "label": "Luigi", "level": 8, "shape": "dot", "size": 20, "title": "Unico figlio di Antonio e Alice"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 98, "label": "Ruben", "level": 9, "shape": "dot", "size": 20, "title": "Unico figlio di Libera e Dario"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 99, "label": "Andrea", "level": 9, "shape": "dot", "size": 20, "title": "Primo figlio di Chiara e Fabio"}, {"color": "rgba(255, 0, 0, 0.7)", "id": 100, "label": "Giulio", "level": 9, "shape": "dot", "size": 20, "title": "Secondo figlio di Chiara e Fabio"}]);
+                  edges = new vis.DataSet([{"color": "black", "from": 1, "title": "Padre di", "to": 3}, {"color": "black", "from": 1, "title": "Padre di", "to": 7}, {"color": "black", "from": 1, "title": "Padre di", "to": 9}, {"color": "black", "from": 1, "title": "Padre di", "to": 11}, {"color": "white", "from": 2, "title": "Madre di", "to": 3}, {"color": "white", "from": 2, "title": "Madre di", "to": 7}, {"color": "white", "from": 2, "title": "Madre di", "to": 9}, {"color": "white", "from": 2, "title": "Madre di", "to": 11}, {"color": "black", "from": 5, "title": "Madre di", "to": 13}, {"color": "black", "from": 5, "title": "Madre di", "to": 15}, {"color": "black", "from": 5, "title": "Madre di", "to": 16}, {"color": "black", "from": 4, "title": "Madre di", "to": 17}, {"color": "black", "from": 4, "title": "Madre di", "to": 18}, {"color": "black", "from": 7, "title": "Madre di", "to": 19}, {"color": "black", "from": 7, "title": "Madre di", "to": 20}, {"color": "black", "from": 7, "title": "Madre di", "to": 22}, {"color": "black", "from": 7, "title": "Madre di", "to": 23}, {"color": "black", "from": 9, "title": "Madre di", "to": 26}, {"color": "black", "from": 9, "title": "Madre di", "to": 28}, {"color": "black", "from": 9, "title": "Madre di", "to": 29}, {"color": "black", "from": 11, "title": "Madre di", "to": 30}, {"color": "black", "from": 11, "title": "Madre di", "to": 32}, {"color": "black", "from": 11, "title": "Madre di", "to": 34}, {"color": "black", "from": 11, "title": "Madre di", "to": 35}, {"color": "black", "from": 11, "title": "Madre di", "to": 37}, {"color": "black", "from": 11, "title": "Madre di", "to": 39}, {"color": "black", "from": 25, "title": "Genitori di", "to": 40}, {"color": "black", "from": 25, "title": "Genitori di", "to": 41}, {"color": "black", "from": 25, "title": "Genitori di", "to": 43}, {"color": "black", "from": -3, "title": "Genitori di", "to": 44}, {"color": "black", "from": -3, "title": "Genitori di", "to": 45}, {"color": "black", "from": -3, "title": "Genitori di", "to": 46}, {"color": "black", "from": 20, "title": "Padre di", "to": 47}, {"color": "black", "from": 20, "title": "Padre di", "to": 48}, {"color": "black", "from": 23, "title": "Madre di", "to": 49}, {"color": "black", "from": 23, "title": "Madre di", "to": 51}, {"color": "black", "from": 23, "title": "Madre di", "to": 53}, {"color": "black", "from": 23, "title": "Madre di", "to": 54}, {"color": "black", "from": 23, "title": "Madre di", "to": 56}, {"color": "black", "from": 26, "title": "Madre di", "to": 57}, {"color": "black", "from": 30, "title": "Madre di", "to": 58}, {"color": "black", "from": 30, "title": "Madre di", "to": 60}, {"color": "black", "from": 30, "title": "Madre di", "to": 61}, {"color": "black", "from": 30, "title": "Madre di", "to": 63}, {"color": "black", "from": 30, "title": "Madre di", "to": 65}, {"color": "black", "from": 37, "title": "Madre di", "to": 67}, {"color": "black", "from": 37, "title": "Madre di", "to": 69}, {"color": "black", "from": 41, "title": "Padre di", "to": 71}, {"color": "black", "from": 49, "title": "Padre di", "to": 72}, {"color": "black", "from": 49, "title": "Padre di", "to": 73}, {"color": "black", "from": 49, "title": "Padre di", "to": 74}, {"color": "black", "from": 51, "title": "Padre di", "to": 75}, {"color": "black", "from": 51, "title": "Padre di", "to": 76}, {"color": "black", "from": 51, "title": "Padre di", "to": 77}, {"color": "black", "from": -4, "title": "Genitori di", "to": 78}, {"color": "black", "from": -4, "title": "Genitori di", "to": 79}, {"color": "black", "from": -4, "title": "Genitori di", "to": 80}, {"color": "black", "from": -4, "title": "Genitori di", "to": 81}, {"color": "black", "from": 54, "title": "Padre di", "to": 82}, {"color": "black", "from": 54, "title": "Padre di", "to": 83}, {"color": "black", "from": -5, "title": "Genitori di", "to": 84}, {"color": "black", "from": -5, "title": "Genitori di", "to": 85}, {"color": "black", "from": 58, "title": "Padre di", "to": 86}, {"color": "black", "from": 61, "title": "Padre di", "to": 88}, {"color": "black", "from": 61, "title": "Padre di", "to": 89}, {"color": "black", "from": 63, "title": "Padre di", "to": 90}, {"color": "black", "from": 65, "title": "Padre di", "to": 91}, {"color": "black", "from": 65, "title": "Padre di", "to": 92}, {"color": "black", "from": 67, "title": "Padre di", "to": 93}, {"color": "black", "from": 67, "title": "Padre di", "to": 95}, {"color": "black", "from": 69, "title": "Padre di", "to": 97}, {"color": "black", "from": 86, "title": "Madre di", "to": 98}, {"color": "black", "from": 93, "title": "Madre di", "to": 99}, {"color": "black", "from": 93, "title": "Madre di", "to": 100}, {"color": "red", "from": 1, "title": "Matrimonio", "to": 2, "width": 5}, {"color": "red", "from": 3, "title": "Matrimonio", "to": 4, "width": 5}, {"color": "red", "from": 3, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": -1, "width": 5}, {"color": "red", "from": -1, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": 5, "width": 5}, {"color": "red", "from": 3, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": -2, "width": 5}, {"color": "red", "from": -2, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": 6, "width": 5}, {"color": "red", "from": 7, "title": "Matrimonio", "to": 8, "width": 5}, {"color": "red", "from": 9, "title": "Matrimonio", "to": 10, "width": 5}, {"color": "red", "from": 11, "title": "Matrimonio", "to": 12, "width": 5}, {"color": "red", "from": 13, "title": "Matrimonio", "to": 14, "width": 5}, {"color": "white", "from": 14, "title": "", "to": 15}, {"color": "white", "from": 15, "title": "", "to": 16}, {"color": "white", "from": 17, "title": "", "to": 18}, {"color": "red", "from": 18, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": -3, "width": 5}, {"color": "red", "from": -3, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": 19, "width": 5}, {"color": "red", "from": 20, "title": "Matrimonio", "to": 21, "width": 5}, {"color": "white", "from": 21, "title": "", "to": 22}, {"color": "white", "from": 22, "title": "", "to": 23}, {"color": "red", "from": 16, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": 25, "width": 5}, {"color": "red", "from": 25, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": 22, "width": 5}, {"color": "red", "from": 23, "title": "Matrimonio", "to": 24, "width": 5}, {"color": "red", "from": 26, "title": "Matrimonio", "to": 27, "width": 5}, {"color": "red", "from": 30, "title": "Matrimonio", "to": 31, "width": 5}, {"color": "red", "from": 32, "title": "Matrimonio", "to": 33, "width": 5}, {"color": "red", "from": 37, "title": "Matrimonio", "to": 38, "width": 5}, {"color": "red", "from": 41, "title": "Matrimonio", "to": 42, "width": 5}, {"color": "red", "from": 49, "title": "Matrimonio", "to": 50, "width": 5}, {"color": "red", "from": 51, "title": "Matrimonio", "to": 52, "width": 5}, {"color": "red", "from": 53, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": -4, "width": 5}, {"color": "red", "from": -4, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": 34, "width": 5}, {"color": "red", "from": 54, "title": "Matrimonio", "to": 55, "width": 5}, {"color": "red", "from": 57, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": -5, "width": 5}, {"color": "red", "from": -5, "smooth": {"enabled": true, "type": "curvedCCW"}, "title": "Matrimonio", "to": 39, "width": 5}, {"color": "red", "from": 58, "title": "Matrimonio", "to": 59, "width": 5}, {"color": "red", "from": 61, "title": "Matrimonio", "to": 62, "width": 5}, {"color": "red", "from": 63, "title": "Matrimonio", "to": 64, "width": 5}, {"color": "red", "from": 65, "title": "Matrimonio", "to": 66, "width": 5}, {"color": "red", "from": 67, "title": "Matrimonio", "to": 68, "width": 5}, {"color": "red", "from": 69, "title": "Matrimonio", "to": 70, "width": 5}, {"color": "red", "from": 86, "title": "Matrimonio", "to": 87, "width": 5}, {"color": "red", "from": 93, "title": "Matrimonio", "to": 94, "width": 5}, {"color": "red", "from": 95, "title": "Matrimonio", "to": 96, "width": 5}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"layout": {"hierarchical": {"enabled": true, "nodeSpacing": 100, "levelSeparation": 200}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
